@@ -1,11 +1,11 @@
-TARGET=smoketest
+TARGET=gl_extensions
 
 all: Makefile $(TARGET)
 
-$(TARGET): test.cc
+$(TARGET): gl_extensions.cc
 	g++ -lGLESv2 -lEGL \
 		-o $(TARGET) \
-		test.cc
+		gl_extensions.cc
 
 clean:
 	rm -f $(TARGET)
