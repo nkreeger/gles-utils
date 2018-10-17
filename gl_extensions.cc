@@ -24,6 +24,7 @@ void LogExtensions(const char* extensions_name, const char* extensions) {
 }
 
 int main() {
+  LogExtensions("EGL_NO_DISPLAY_EXTENSIONS", eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS));
 
   EGLDisplay display;
   display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
@@ -37,7 +38,7 @@ int main() {
     return 1;
   }
 
-  LogExtensions("EGL_EXTENSIONS", eglQueryString(display, EGL_EXTENSIONS));
+  LogExtensions("EGL_DISPLAY_EXTENSIONS", eglQueryString(display, EGL_EXTENSIONS));
 
   eglBindAPI(EGL_OPENGL_ES_API);
   if (eglGetError() != EGL_SUCCESS) {
