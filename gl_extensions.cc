@@ -19,11 +19,12 @@ void LogExtensions(const char* extensions_name, const char* extensions) {
     std::cout << token << std::endl;
     s.erase(0, pos + delim.length());
   }
-  std::cout << s;
-  std::cout << "-------------------------" << std::endl;
+  std::cout << s << std::endl;
+  std::cout << "-------------------------" << std::endl << std::endl;
 }
 
 int main() {
+
   EGLDisplay display;
   display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
   if (display == EGL_NO_DISPLAY) {
@@ -35,6 +36,8 @@ int main() {
     std::cerr << "Could not initialize display" << std::endl;
     return 1;
   }
+
+  LogExtensions("EGL_EXTENSIONS", eglQueryString(display, EGL_EXTENSIONS));
 
   eglBindAPI(EGL_OPENGL_ES_API);
   if (eglGetError() != EGL_SUCCESS) {
