@@ -82,5 +82,9 @@ int main() {
   LogExtensions("GL_EXTENSIONS",
                 reinterpret_cast<const char*>(get_string(GL_EXTENSIONS)));
 
+  eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+  eglDestroyContext(display, context);
+  eglDestroySurface(display, surface);
+
   return 0;
 }
