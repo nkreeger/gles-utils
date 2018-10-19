@@ -33,10 +33,15 @@ int main() {
     return 1;
   }
 
-  if (!eglInitialize(display, nullptr, nullptr)) {
+  EGLint major;
+  EGLint minor;
+  if (!eglInitialize(display, &major, &minor)) {
     std::cerr << "Could not initialize display" << std::endl;
     return 1;
   }
+
+  std::cout << "EGL major: " << major << std::endl;
+  std::cout << "EGL minor: " << minor << std::endl;
 
   LogExtensions("EGL_DISPLAY_EXTENSIONS", eglQueryString(display, EGL_EXTENSIONS));
 
@@ -85,6 +90,15 @@ int main() {
 
   LogExtensions("GL_EXTENSIONS",
                 reinterpret_cast<const char*>(get_string(GL_EXTENSIONS)));
+
+  LogExtensions("GL_VERSION",
+                reinterpret_cast<const char*>(get_string(GL_VERSION)));
+
+  LogExtensions("GL_RENDERER",
+                reinterpret_cast<const char*>(get_string(GL_RENDERER)));
+
+  LogExtensions("GL_VENDOR",
+                reinterpret_cast<const char*>(get_string(GL_VENDOR)));
 
   eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
   eglDestroyContext(display, context);
