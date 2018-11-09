@@ -1,11 +1,12 @@
-#include <iostream>
-#include <string>
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
+#include <iostream>
+#include <string>
 
 void LogExtensions(const char* extensions_name, const char* extensions) {
   if (!extensions) {
-    std::cerr << "Null extensions string passed for : " << extensions_name << std::endl;
+    std::cerr << "Null extensions string passed for : " << extensions_name
+              << std::endl;
     return;
   }
 
@@ -24,7 +25,8 @@ void LogExtensions(const char* extensions_name, const char* extensions) {
 }
 
 int main() {
-  LogExtensions("EGL_NO_DISPLAY_EXTENSIONS", eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS));
+  LogExtensions("EGL_NO_DISPLAY_EXTENSIONS",
+                eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS));
 
   EGLDisplay display;
   display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
@@ -43,7 +45,8 @@ int main() {
   std::cout << "EGL major: " << major << std::endl;
   std::cout << "EGL minor: " << minor << std::endl;
 
-  LogExtensions("EGL_DISPLAY_EXTENSIONS", eglQueryString(display, EGL_EXTENSIONS));
+  LogExtensions("EGL_DISPLAY_EXTENSIONS",
+                eglQueryString(display, EGL_EXTENSIONS));
 
   eglBindAPI(EGL_OPENGL_ES_API);
   if (eglGetError() != EGL_SUCCESS) {
@@ -68,14 +71,16 @@ int main() {
   }
 
   EGLint context_attribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
-  EGLContext context = eglCreateContext(display, config, EGL_NO_CONTEXT, context_attribs);
+  EGLContext context =
+      eglCreateContext(display, config, EGL_NO_CONTEXT, context_attribs);
   if (context == EGL_NO_CONTEXT) {
     std::cerr << "Could not create context" << std::endl;
     return 1;
   }
 
   EGLint surface_attribs[] = {EGL_LARGEST_PBUFFER, EGL_TRUE, EGL_NONE};
-  EGLSurface surface = eglCreatePbufferSurface(display, config, surface_attribs);
+  EGLSurface surface =
+      eglCreatePbufferSurface(display, config, surface_attribs);
   if (surface == EGL_NO_SURFACE) {
     std::cerr << "Could not create surface" << std::endl;
     return 1;
