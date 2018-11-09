@@ -72,6 +72,7 @@ class EGLSession {
     EGLint surface_attribs[] = {EGL_LARGEST_PBUFFER, EGL_TRUE, EGL_NONE};
     surface = eglCreatePbufferSurface(display, config, surface_attribs);
     if (surface == EGL_NO_SURFACE) {
+      std::cerr << "huh: " << surface << std::endl;
       std::cerr << "Could not create surface" << std::endl;
       return;
     }
