@@ -1,7 +1,11 @@
 #include <EGL/egl.h>
 #include <GLES2/gl2.h>
+
 #include <iostream>
+#include <memory>
 #include <string>
+
+#include "egl_utils.h"
 
 void LogExtensions(const char* extensions_name, const char* extensions) {
   if (!extensions) {
@@ -28,65 +32,9 @@ int main() {
   LogExtensions("EGL_NO_DISPLAY_EXTENSIONS",
                 eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS));
 
-  EGLDisplay display;
-  display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-  if (display == EGL_NO_DISPLAY) {
-    std::cerr << "No display" << std::endl;
-    return 1;
-  }
-
-  EGLint major;
-  EGLint minor;
-  if (!eglInitialize(display, &major, &minor)) {
-    std::cerr << "Could not initialize display" << std::endl;
-    return 1;
-  }
-
-  std::cout << "EGL major: " << major << std::endl;
-  std::cout << "EGL minor: " << minor << std::endl;
-
-  LogExtensions("EGL_DISPLAY_EXTENSIONS",
-                eglQueryString(display, EGL_EXTENSIONS));
-
-  eglBindAPI(EGL_OPENGL_ES_API);
-  if (eglGetError() != EGL_SUCCESS) {
-    std::cerr << "Failed to set OpenGL ES API" << std::endl;
-    return 1;
-  }
-
-  EGLint attrib_list[] = {EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
-                          EGL_RED_SIZE,     8,
-                          EGL_GREEN_SIZE,   8,
-                          EGL_BLUE_SIZE,    8,
-                          EGL_ALPHA_SIZE,   8,
-                          EGL_DEPTH_SIZE,   24,
-                          EGL_STENCIL_SIZE, 8,
-                          EGL_NONE};
-
-  EGLint num_config;
-  EGLConfig config;
-  if (!eglChooseConfig(display, attrib_list, &config, 1, &num_config)) {
-    std::cerr << "Failed creating a config" << std::endl;
-    return 1;
-  }
-
-  EGLint context_attribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
-  EGLContext context =
-      eglCreateContext(display, config, EGL_NO_CONTEXT, context_attribs);
-  if (context == EGL_NO_CONTEXT) {
-    std::cerr << "Could not create context" << std::endl;
-    return 1;
-  }
-
-  EGLint surface_attribs[] = {EGL_LARGEST_PBUFFER, EGL_TRUE, EGL_NONE};
-  EGLSurface surface =
-      eglCreatePbufferSurface(display, config, surface_attribs);
-  if (surface == EGL_NO_SURFACE) {
-    std::cerr << "Could not create surface" << std::endl;
-    return 1;
-  }
-  if (!eglMakeCurrent(display, surface, surface, context)) {
-    std::cerr << "Could not make context current" << std::endl;
+  std::unique_ptr<EGLSession> session(EGLSession::Create());
+  if (!session) {
+    std::cerr << "Could not init EGL session" << std::endl;
     return 1;
   }
 
@@ -104,10 +52,6 @@ int main() {
 
   LogExtensions("GL_VENDOR",
                 reinterpret_cast<const char*>(get_string(GL_VENDOR)));
-
-  eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-  eglDestroyContext(display, context);
-  eglDestroySurface(display, surface);
 
   return 0;
 }

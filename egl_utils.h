@@ -16,9 +16,8 @@ class EGLSession {
   }
 
   ~EGLSession() {
-    //
-    // TODO(kreeger): Cleanup EGL stuff:
-    //
+    eglDestroyContext(display, context);
+    eglDestroySurface(display, surface);
   }
 
   EGLContext context;
@@ -56,6 +55,14 @@ class EGLSession {
       return;
     }
 
+    EGLint context_attribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
+    EGLContext context =
+        eglCreateContext(display, config, EGL_NO_CONTEXT, context_attribs);
+    if (context == EGL_NO_CONTEXT) {
+      std::cerr << "Could not create context" << std::endl;
+      return;
+    }
+
     eglBindAPI(EGL_OPENGL_ES_API);
     if (eglGetError() != EGL_SUCCESS) {
       std::cerr << "Failed to set OpenGL ES API" << std::endl;
@@ -67,11 +74,11 @@ class EGLSession {
         eglCreatePbufferSurface(display, config, surface_attribs);
     if (surface == EGL_NO_SURFACE) {
       std::cerr << "Could not create surface" << std::endl;
-      return 1;
+      return;
     }
     if (!eglMakeCurrent(display, surface, surface, context)) {
       std::cerr << "Could not make context current" << std::endl;
-      return 1;
+      return;
     }
 
     // EGL successfully setup:
