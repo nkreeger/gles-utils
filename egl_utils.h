@@ -40,6 +40,12 @@ class EGLSession {
       return;
     }
 
+    eglBindAPI(EGL_OPENGL_ES_API);
+    if (eglGetError() != EGL_SUCCESS) {
+      std::cerr << "Failed to set OpenGL ES API" << std::endl;
+      return;
+    }
+
     EGLint attrib_list[] = {EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
                             EGL_RED_SIZE,     8,
                             EGL_GREEN_SIZE,   8,
@@ -56,22 +62,15 @@ class EGLSession {
     }
 
     EGLint context_attribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
-    EGLContext context =
+    context =
         eglCreateContext(display, config, EGL_NO_CONTEXT, context_attribs);
     if (context == EGL_NO_CONTEXT) {
       std::cerr << "Could not create context" << std::endl;
       return;
     }
 
-    eglBindAPI(EGL_OPENGL_ES_API);
-    if (eglGetError() != EGL_SUCCESS) {
-      std::cerr << "Failed to set OpenGL ES API" << std::endl;
-      return;
-    }
-
     EGLint surface_attribs[] = {EGL_LARGEST_PBUFFER, EGL_TRUE, EGL_NONE};
-    EGLSurface surface =
-        eglCreatePbufferSurface(display, config, surface_attribs);
+    surface = eglCreatePbufferSurface(display, config, surface_attribs);
     if (surface == EGL_NO_SURFACE) {
       std::cerr << "Could not create surface" << std::endl;
       return;

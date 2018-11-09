@@ -1,8 +1,8 @@
 /* #include <EGL/egl.h> */
 /* #include <GLES2/gl2.h> */
+#include <string.h>
 #include <iostream>
 #include <memory>
-#include <string.h>
 
 #include "egl_utils.h"
 
