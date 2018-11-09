@@ -44,5 +44,9 @@ int main() {
   GLuint framebuffer;
   glGenFramebuffers(1, &framebuffer);
 
+  // Create two textures.
+  GLuint textures[2];
+  glGenTextures(2, textures);
+
   return 1;
 }
