@@ -24,6 +24,17 @@ int main() {
     return 1;
   }
 
+  // Setup
+  glDisable(GL_DEPTH_TEST);
+  glDisable(GL_STENCIL_TEST);
+  glDisable(GL_BLEND);
+  glDisable(GL_DITHER);
+  glDisable(GL_POLYGON_OFFSET_FILL);
+  glDisable(GL_SAMPLE_COVERAGE);
+  glEnable(GL_SCISSOR_TEST);
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+
   // Create 2 buffers:
   // vertex, index
 
