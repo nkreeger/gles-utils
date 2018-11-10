@@ -4,6 +4,8 @@
 #include <iostream>
 #include <memory>
 
+#include <GLES3/gl32.h>
+
 #include "egl_utils.h"
 
 int main() {
@@ -44,9 +46,22 @@ int main() {
   GLuint framebuffer;
   glGenFramebuffers(1, &framebuffer);
 
-  // Create two textures.
-  GLuint textures[2];
-  glGenTextures(2, textures);
+  // Create texture.
+  GLuint texture;
+  glGenTextures(1, &texture);
+
+  // Bind texture and configure
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_R16F, 2, 2, 0, GL_RED, GL_HALF_FLOAT,
+               nullptr);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  // TODO(kreeger): bind fragment shader
+  // TODO(kreeger): bind vertex shader
 
   return 1;
 }
