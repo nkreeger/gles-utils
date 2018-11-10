@@ -1,20 +1,23 @@
-# TODO(kreeger): Handle Angle build includes here.
+IFLAGS=
+LDDFLAGS=
+
 ifeq ($(OS),Windows_NT)
-    CCFLAGS += -D WIN32
+		# TODO(kreeger): Handle Angle build includes here.
 else
     UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),Darwin)
-        CCFLAGS += -D OSX
+				IFLAGS += -I../angle/include
+				LDDFLAGS += -L../angle/out/Debug
     endif
 endif
 
 all: gl_extensions half_float_tex_test
 
 gl_extensions: gl_extensions.cc
-	g++ gl_extensions.cc -lGLESv2 -lEGL -o gl_extensions
+	g++ $(IFLAGS) gl_extensions.cc $(LDDFLAGS) -lGLESv2 -lEGL -o gl_extensions
 
 half_float_tex_test: half_float_tex_test.cc
-	g++ half_float_tex_test.cc -lGLESv2 -lEGL -o half_float_tex_test
+	g++ $(IFLAGS) half_float_tex_test.cc $(LDDFLAGS) -lGLESv2 -lEGL -o half_float_tex_test
 
 clean:
 	rm -f *.o gl_extensions half_float_tex_test
