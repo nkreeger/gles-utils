@@ -10,52 +10,32 @@
 #include "gles_utils.h"
 #include "half_float_utils.h"
 
-void test_texture(GLuint framebuffer, bool half_float, GLuint *texture) {
+void test_texture(GLuint framebuffer, GLuint *texture) {
   // Create a 1x1 texture for now:
   /* half-float: R32F / RED / GL_HALF_FLOAT */
-  /*      float: R32F / RED / GL_FLOAT */
-  if (half_float) {
-    create_texture_2d(GL_R16F, GL_RED, GL_HALF_FLOAT, texture);
-  } else {
-    create_texture_2d(GL_R32F, GL_RED, GL_FLOAT, texture);
-  }
-
-  glBindTexture(GL_TEXTURE_2D, *texture);
+  create_texture_2d(GL_R16F, GL_RED, GL_HALF_FLOAT, texture);
 
   // Bind test values:
-  if (half_float) {
-    // I think I need to send uint16_t instead of float here!
-    uint16_t values[] = {Float16Compressor::compress(1.5f)};
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_HALF_FLOAT,
-                    values);
-  } else {
-    float values[] = {1.5f};
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_FLOAT, values);
-  }
+  glBindTexture(GL_TEXTURE_2D, *texture);
+  uint16_t values[] = {Float16Compressor::compress(1.5f)};
+  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_HALF_FLOAT, values);
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // Now bind framebuffer and read values
   glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                          *texture, 0);
-  // TODO check framebuffer status?
 
   glViewport(0, 0, 1, 1);
   glScissor(0, 0, 1, 1);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
-  if (half_float) {
-    void *buffer = malloc(sizeof(uint16_t) * 1);
-    glReadPixels(0, 0, 1, 1, GL_RED, GL_HALF_FLOAT, buffer);
+  void *buffer = malloc(sizeof(uint16_t) * 1);
+  glReadPixels(0, 0, 1, 1, GL_RED, GL_HALF_FLOAT, buffer);
 
-    float value =
-        Float16Compressor::decompress(static_cast<uint16_t *>(buffer)[0]);
-    std::cerr << "item: " << value << std::endl;
-  } else {
-    void *buffer = malloc(sizeof(float) * 1);
-    glReadPixels(0, 0, 1, 1, GL_RED, GL_FLOAT, buffer);
-    std::cerr << "item: " << static_cast<float *>(buffer)[0] << std::endl;
-  }
+  float value =
+      Float16Compressor::decompress(static_cast<uint16_t *>(buffer)[0]);
+  std::cerr << "texture value: " << value << " (should be 1.5)" << std::endl;
 }
 
 int main() {
@@ -107,8 +87,7 @@ int main() {
   glGenFramebuffers(1, &framebuffer);
 
   GLuint texture;
-  test_texture(framebuffer, true, &texture);
-  test_texture(framebuffer, false, &texture);
+  test_texture(framebuffer, &texture);
 
   /* // Create and bind the fragment shader: */
   /* GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER); */
