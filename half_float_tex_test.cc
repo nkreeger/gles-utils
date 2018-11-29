@@ -1,33 +1,25 @@
 /* #include <EGL/egl.h> */
 /* #include <GLES2/gl2.h> */
+#include <string.h>
 #include <iostream>
 #include <memory>
-#include <string.h>
 
 #include <GLES3/gl32.h>
 
 #include "egl_utils.h"
 #include "gles_utils.h"
 
-void create_texture(GLuint framebuffer, bool half_float, GLuint* texture) {
-  glGenTextures(1, texture);
-
-  glBindTexture(GL_TEXTURE_2D, *texture);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
+void test_texture(GLuint framebuffer, bool half_float, GLuint* texture) {
   // Create a 1x1 texture for now:
   /* R32F / RED / GL_HALF_FLOAT */
-  /*   R32F / RED / GL_FLOAT */
+  /* R32F / RED / GL_FLOAT */
   if (half_float) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, 1, 1, 0, GL_RED, GL_HALF_FLOAT,
-        nullptr);
+    create_texture_2d(GL_R32F, GL_RED, GL_HALF_FLOAT, texture);
   } else {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, 1, 1, 0, GL_RED, GL_FLOAT,
-        nullptr);
+    create_texture_2d(GL_R32F, GL_RED, GL_FLOAT, texture);
   }
+
+  glBindTexture(GL_TEXTURE_2D, *texture);
 
   // Bind test values:
   float values[] = {1.5f};
@@ -108,8 +100,8 @@ int main() {
   glGenFramebuffers(1, &framebuffer);
 
   GLuint texture;
-  create_texture(framebuffer, true, &texture);
-  create_texture(framebuffer, false, &texture);
+  test_texture(framebuffer, true, &texture);
+  test_texture(framebuffer, false, &texture);
 
   /* // Create and bind the fragment shader: */
   /* GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER); */

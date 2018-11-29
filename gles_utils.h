@@ -1,8 +1,8 @@
 #ifndef GLES_UTILS_H_
 #define GLES_UTILS_H_
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <string>
 
 #include <GLES3/gl32.h>
@@ -23,10 +23,13 @@ bool check_for_errors() {
         std::cerr << "Found unchecked GL error: GL_INVALID_VALUE" << std::endl;
         break;
       case GL_INVALID_OPERATION:
-        std::cerr << "Found unchecked GL error: GL_INVALID_OPERATION" << std::endl;
+        std::cerr << "Found unchecked GL error: GL_INVALID_OPERATION"
+                  << std::endl;
         break;
       case GL_INVALID_FRAMEBUFFER_OPERATION:
-        std::cerr << "Found unchecked GL error: GL_INVALID_FRAMEBUFFER_OPERATION" << std::endl;
+        std::cerr
+            << "Found unchecked GL error: GL_INVALID_FRAMEBUFFER_OPERATION"
+            << std::endl;
         break;
       case GL_OUT_OF_MEMORY:
         std::cerr << "Found unchecked GL error: GL_OUT_OF_MEMORY" << std::endl;
@@ -58,5 +61,18 @@ void set_shader_src(GLuint shader, const char* file_name) {
   check_for_errors();
 }
 
+//
+// Creates a texture with given internalFormat, format, and type.
+//
+void create_texture_2d(GLint internal_format, GLenum format, GLenum type, GLuint* texture) {
+  glGenTextures(1, texture);
+  glBindTexture(GL_TEXTURE_2D, *texture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexImage2D(GL_TEXTURE_2D, 0, internal_format, 1, 1, 0, format, type, nullptr);
+  glBindTexture(GL_TEXTURE_2D, 0);
+}
 
 #endif  // GLES_UTILS_H_
