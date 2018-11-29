@@ -9,7 +9,7 @@
 #include "egl_utils.h"
 #include "gles_utils.h"
 
-void test_texture(GLuint framebuffer, bool half_float, GLuint* texture) {
+void test_texture(GLuint framebuffer, bool half_float, GLuint *texture) {
   // Create a 1x1 texture for now:
   /* half-float: R32F / RED / GL_HALF_FLOAT */
   /*      float: R32F / RED / GL_FLOAT */
@@ -41,14 +41,14 @@ void test_texture(GLuint framebuffer, bool half_float, GLuint* texture) {
   glScissor(0, 0, 1, 1);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
-  void* buffer = malloc(sizeof(float) * 1);
+  void *buffer = malloc(sizeof(float) * 1);
   if (half_float) {
-    glReadPixels(0, 0, 1, 1, GL_RED, GL_HALF_FLOAT, buffer);
+    glReadPixels(0, 0, 1, 1, GL_RED, GL_FLOAT, buffer);
   } else {
     glReadPixels(0, 0, 1, 1, GL_RED, GL_FLOAT, buffer);
   }
 
-  std::cerr << "item: " << static_cast<float*>(buffer)[0] << std::endl;
+  std::cerr << "item: " << static_cast<float *>(buffer)[0] << std::endl;
 }
 
 int main() {
@@ -61,7 +61,7 @@ int main() {
   // First - check if 'OES_texture_half_float' is enabled:
   PFNGLGETSTRINGPROC get_string =
       reinterpret_cast<PFNGLGETSTRINGPROC>(eglGetProcAddress("glGetString"));
-  if (strstr(reinterpret_cast<const char*>(get_string(GL_EXTENSIONS)),
+  if (strstr(reinterpret_cast<const char *>(get_string(GL_EXTENSIONS)),
              "OES_texture_half_float") == nullptr) {
     std::cerr << "OES_texture_half_float is not supported!" << std::endl;
     return 1;

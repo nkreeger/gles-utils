@@ -64,14 +64,16 @@ void set_shader_src(GLuint shader, const char* file_name) {
 //
 // Creates a texture with given internalFormat, format, and type.
 //
-void create_texture_2d(GLint internal_format, GLenum format, GLenum type, GLuint* texture) {
+void create_texture_2d(GLint internal_format, GLenum format, GLenum type,
+                       GLuint* texture) {
   glGenTextures(1, texture);
   glBindTexture(GL_TEXTURE_2D, *texture);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D, 0, internal_format, 1, 1, 0, format, type, nullptr);
+  glTexImage2D(GL_TEXTURE_2D, 0, internal_format, 1, 1, 0, format, type,
+               nullptr);
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
