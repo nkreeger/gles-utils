@@ -36,6 +36,8 @@ void test_texture(GLuint framebuffer, GLuint *texture) {
   float value =
       Float16Compressor::decompress(static_cast<uint16_t *>(buffer)[0]);
   std::cerr << "texture value: " << value << " (should be 1.5)" << std::endl;
+
+  free(buffer);
 }
 
 int main() {
