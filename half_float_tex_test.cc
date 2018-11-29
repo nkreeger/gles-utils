@@ -11,8 +11,8 @@
 
 void test_texture(GLuint framebuffer, bool half_float, GLuint* texture) {
   // Create a 1x1 texture for now:
-  /* R32F / RED / GL_HALF_FLOAT */
-  /* R32F / RED / GL_FLOAT */
+  /* half-float: R32F / RED / GL_HALF_FLOAT */
+  /*      float: R32F / RED / GL_FLOAT */
   if (half_float) {
     create_texture_2d(GL_R32F, GL_RED, GL_HALF_FLOAT, texture);
   } else {
