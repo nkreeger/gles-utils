@@ -8,6 +8,7 @@
 
 #include "egl_utils.h"
 #include "gles_utils.h"
+#include "half_float_utils.h"
 
 void test_texture(GLuint framebuffer, bool half_float, GLuint *texture) {
   // Create a 1x1 texture for now:
@@ -22,11 +23,13 @@ void test_texture(GLuint framebuffer, bool half_float, GLuint *texture) {
   glBindTexture(GL_TEXTURE_2D, *texture);
 
   // Bind test values:
-  float values[] = {1.5f};
   if (half_float) {
     // I think I need to send uint16_t instead of float here!
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_FLOAT, values);
+    uint16_t values[] = {Float16Compressor::compress(1.5f)};
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_HALF_FLOAT,
+                    values);
   } else {
+    float values[] = {1.5f};
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_FLOAT, values);
   }
   glBindTexture(GL_TEXTURE_2D, 0);
@@ -41,14 +44,18 @@ void test_texture(GLuint framebuffer, bool half_float, GLuint *texture) {
   glScissor(0, 0, 1, 1);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
-  void *buffer = malloc(sizeof(float) * 1);
   if (half_float) {
-    glReadPixels(0, 0, 1, 1, GL_RED, GL_FLOAT, buffer);
-  } else {
-    glReadPixels(0, 0, 1, 1, GL_RED, GL_FLOAT, buffer);
-  }
+    void *buffer = malloc(sizeof(uint16_t) * 1);
+    glReadPixels(0, 0, 1, 1, GL_RED, GL_HALF_FLOAT, buffer);
 
-  std::cerr << "item: " << static_cast<float *>(buffer)[0] << std::endl;
+    float value =
+        Float16Compressor::decompress(static_cast<uint16_t *>(buffer)[0]);
+    std::cerr << "item: " << value << std::endl;
+  } else {
+    void *buffer = malloc(sizeof(float) * 1);
+    glReadPixels(0, 0, 1, 1, GL_RED, GL_FLOAT, buffer);
+    std::cerr << "item: " << static_cast<float *>(buffer)[0] << std::endl;
+  }
 }
 
 int main() {
