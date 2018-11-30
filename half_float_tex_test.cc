@@ -4,7 +4,9 @@
 #include <iostream>
 #include <memory>
 
-#include <GLES3/gl32.h>
+// #include <GLES2/gl32.h>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 
 #include "egl_utils.h"
 #include "gles_utils.h"
@@ -13,12 +15,14 @@
 void test_texture(GLuint framebuffer, GLuint *texture) {
   // Create a 1x1 texture for now:
   /* half-float: R32F / RED / GL_HALF_FLOAT */
-  create_texture_2d(GL_R16F, GL_RED, GL_HALF_FLOAT, texture);
+  // create_texture_2d(GL_R16F, GL_RED, GL_HALF_FLOAT, texture);
+  create_texture_2d(GL_R16F_EXT, GL_R16F_EXT, GL_HALF_FLOAT_OES, texture);
 
   // Bind test values:
   glBindTexture(GL_TEXTURE_2D, *texture);
-  uint16_t values[] = {Float16Compressor::compress(1.5f)};
-  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_HALF_FLOAT, values);
+  // uint16_t values[] = {Float16Compressor::compress(1.5f)};
+  float values[] = {1.5f};
+  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_R16F_EXT, GL_FLOAT, values);
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // Now bind framebuffer and read values
@@ -30,11 +34,13 @@ void test_texture(GLuint framebuffer, GLuint *texture) {
   glScissor(0, 0, 1, 1);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
-  void *buffer = malloc(sizeof(uint16_t) * 1);
-  glReadPixels(0, 0, 1, 1, GL_RED, GL_HALF_FLOAT, buffer);
+  // void *buffer = malloc(sizeof(uint16_t) * 1);
+  void *buffer = malloc(sizeof(float) * 1);
+  glReadPixels(0, 0, 1, 1, GL_R16F_EXT, GL_FLOAT, buffer);
 
-  float value =
-      Float16Compressor::decompress(static_cast<uint16_t *>(buffer)[0]);
+  // float value =
+  //     Float16Compressor::decompress(static_cast<uint16_t *>(buffer)[0]);
+  float value = static_cast<float*>(buffer)[0];
   std::cerr << "texture value: " << value << " (should be 1.5)" << std::endl;
 
   free(buffer);
