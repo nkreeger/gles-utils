@@ -14,13 +14,10 @@
 
 void test_texture(GLuint framebuffer, GLuint *texture) {
   // Create a 1x1 texture for now:
-  /* half-float: R32F / RED / GL_HALF_FLOAT */
-  // create_texture_2d(GL_R16F, GL_RED, GL_HALF_FLOAT, texture);
   create_texture_2d(GL_RGBA, GL_RGBA, GL_HALF_FLOAT_OES, texture);
 
   // Bind test values:
   glBindTexture(GL_TEXTURE_2D, *texture);
-  // uint16_t values[] = {Float16Compressor::compress(1.5f)};
   float values[] = {1.5f, 0.0f, 0.0f, 0.0f};
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_FLOAT, values);
   glBindTexture(GL_TEXTURE_2D, 0);
@@ -34,14 +31,17 @@ void test_texture(GLuint framebuffer, GLuint *texture) {
   glScissor(0, 0, 1, 1);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
-  // void *buffer = malloc(sizeof(uint16_t) * 1);
   void *buffer = malloc(sizeof(float) * 4);
   glReadPixels(0, 0, 1, 1, GL_RGBA, GL_FLOAT, buffer);
 
-  // float value =
-  //     Float16Compressor::decompress(static_cast<uint16_t *>(buffer)[0]);
-  float value = static_cast<float*>(buffer)[0];
-  std::cerr << "texture value: " << value << " (should be 1.5)" << std::endl;
+  std::cerr << "texture value: " << static_cast<float *>(buffer)[0]
+            << " (should be 1.5)" << std::endl;
+  std::cerr << "texture value: " << static_cast<float *>(buffer)[1]
+            << " (should be 0)" << std::endl;
+  std::cerr << "texture value: " << static_cast<float *>(buffer)[2]
+            << " (should be 0)" << std::endl;
+  std::cerr << "texture value: " << static_cast<float *>(buffer)[3]
+            << " (should be 0)" << std::endl;
 
   free(buffer);
 }
