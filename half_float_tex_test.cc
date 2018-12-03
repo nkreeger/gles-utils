@@ -26,6 +26,10 @@ void test_texture(GLuint framebuffer, GLuint *texture) {
   glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                          *texture, 0);
+  GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+  if (status != GL_FRAMEBUFFER_COMPLETE) {
+    fprintf(stderr, "Texture failed to attach to framebuffer: 0x%X\n", status);
+  }
 
   glViewport(0, 0, 1, 1);
   glScissor(0, 0, 1, 1);
