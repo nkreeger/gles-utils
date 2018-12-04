@@ -20,7 +20,6 @@ void test_texture(GLuint framebuffer, GLuint *texture) {
   glBindTexture(GL_TEXTURE_2D, *texture);
   float values[] = {1.5f, 0.0f, 0.0f, 0.0f};
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_FLOAT, values);
-  glBindTexture(GL_TEXTURE_2D, 0);
 
   // Now bind framebuffer and read values
   glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
