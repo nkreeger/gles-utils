@@ -1,10 +1,7 @@
-/* #include <EGL/egl.h> */
-/* #include <GLES2/gl2.h> */
 #include <string.h>
 #include <iostream>
 #include <memory>
 
-// #include <GLES2/gl32.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
@@ -65,61 +62,13 @@ int main() {
     return 1;
   }
 
-  // Setup
-  glDisable(GL_DEPTH_TEST);
-  glDisable(GL_STENCIL_TEST);
-  glDisable(GL_BLEND);
-  glDisable(GL_DITHER);
-  glDisable(GL_POLYGON_OFFSET_FILL);
-  glDisable(GL_SAMPLE_COVERAGE);
-  glEnable(GL_SCISSOR_TEST);
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
-
-  // Create 2 buffers:
-  // vertex, index
-  GLuint buffers[2];
-  glGenBuffers(2, buffers);
-
-  // Bind vertex buffer:
-  glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-  float coords[] = {-1.f, 1.f, 0.f, 0.f, 1.f, -1.f, -1.f, 0.f, 0.f, 0.f,
-                    1.f,  1.f, 0.f, 1.f, 1.f, 1.f,  -1.f, 0.f, 1.f, 0.f};
-  glBufferData(GL_ARRAY_BUFFER, sizeof(coords), coords, GL_STATIC_DRAW);
-
-  // Bind index buffer:
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-  uint16_t indices[] = {0, 1, 2, 2, 1, 3};
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
-               GL_STATIC_DRAW);
-
-  // Create an off-screen frame buffer:
+  GLuint vertex_buffer;
+  GLuint index_buffer;
   GLuint framebuffer;
-  glGenFramebuffers(1, &framebuffer);
+  bootstrap_env(&vertex_buffer, &index_buffer, &framebuffer);
 
   GLuint texture;
   test_texture(framebuffer, &texture);
-
-  /* // Create and bind the fragment shader: */
-  /* GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER); */
-  /* set_shader_src(fragment_shader, "fragment_shader.glsl"); */
-  /* glCompileShader(fragment_shader); */
-  /* check_for_errors(); */
-
-  /* // Create and bind the vertex shader: */
-  /* GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER); */
-  /* set_shader_src(vertex_shader, "vertex_shader.glsl"); */
-  /* glCompileShader(vertex_shader); */
-  /* check_for_errors(); */
-
-  // Create program and attach shaders
-  /* GLuint program = glCreateProgram(); */
-  /* glAttachShader(program, vertex_shader); */
-  /* glAttachShader(program, fragment_shader); */
-  /* glLinkProgram(program); */
-  /* check_for_errors(); */
-
-  // Ensure everything is good:
 
   return 0;
 }
