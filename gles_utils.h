@@ -67,7 +67,8 @@ void set_shader_src(GLuint shader, const char* file_name) {
 void create_texture_2d(GLint internal_format, GLenum format, GLenum type,
                        GLuint* texture) {
   std::cerr << "------- CREATE TEXTURE -----------------" << std::endl;
-  std::cerr << "* internalFormat: 0x" << std::hex << internal_format << std::endl;
+  std::cerr << "* internalFormat: 0x" << std::hex << internal_format
+            << std::endl;
   std::cerr << "* format        : 0x" << std::hex << format << std::endl;
   std::cerr << "* type          : 0x" << std::hex << type << std::endl;
   std::cerr << "----------------------------------------" << std::endl;
@@ -86,7 +87,8 @@ void create_texture_2d(GLint internal_format, GLenum format, GLenum type,
 //
 // Bootstraps environment for offscreen GL math.
 //
-void bootstrap_env(GLuint *vertex_buffer, GLuint *index_buffer, GLuint* framebuffer) {
+void bootstrap_env(GLuint* vertex_buffer, GLuint* index_buffer,
+                   GLuint* framebuffer) {
   glDisable(GL_DEPTH_TEST);
   glDisable(GL_STENCIL_TEST);
   glDisable(GL_BLEND);
@@ -101,7 +103,7 @@ void bootstrap_env(GLuint *vertex_buffer, GLuint *index_buffer, GLuint* framebuf
     glGenBuffers(1, vertex_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, *vertex_buffer);
     float coords[] = {-1.f, 1.f, 0.f, 0.f, 1.f, -1.f, -1.f, 0.f, 0.f, 0.f,
-      1.f,  1.f, 0.f, 1.f, 1.f, 1.f,  -1.f, 0.f, 1.f, 0.f};
+                      1.f,  1.f, 0.f, 1.f, 1.f, 1.f,  -1.f, 0.f, 1.f, 0.f};
     glBufferData(GL_ARRAY_BUFFER, sizeof(coords), coords, GL_STATIC_DRAW);
   }
 
@@ -110,7 +112,7 @@ void bootstrap_env(GLuint *vertex_buffer, GLuint *index_buffer, GLuint* framebuf
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *index_buffer);
     uint16_t indices[] = {0, 1, 2, 2, 1, 3};
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
-        GL_STATIC_DRAW);
+                 GL_STATIC_DRAW);
   }
 
   if (framebuffer) {
