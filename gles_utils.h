@@ -66,13 +66,6 @@ void set_shader_src(GLuint shader, const char* file_name) {
 //
 void create_texture_2d(GLint internal_format, GLenum format, GLenum type,
                        GLuint* texture) {
-  std::cerr << "------- CREATE TEXTURE -----------------" << std::endl;
-  std::cerr << "* internalFormat: 0x" << std::hex << internal_format
-            << std::endl;
-  std::cerr << "* format        : 0x" << std::hex << format << std::endl;
-  std::cerr << "* type          : 0x" << std::hex << type << std::endl;
-  std::cerr << "----------------------------------------" << std::endl;
-
   glGenTextures(1, texture);
   glBindTexture(GL_TEXTURE_2D, *texture);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
