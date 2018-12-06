@@ -35,18 +35,14 @@ void test_texture(GLuint framebuffer, GLuint *texture) {
   void *buffer = malloc(sizeof(uint8_t) * 4);
   glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 
-  std::cerr << "texture value: " << std::dec
-            << static_cast<uint8_t *>(buffer)[0] << " (should be 2)"
-            << std::endl;
-  std::cerr << "texture value: " << std::dec
-            << static_cast<uint8_t *>(buffer)[1] << " (should be 0)"
-            << std::endl;
-  std::cerr << "texture value: " << std::dec
-            << static_cast<uint8_t *>(buffer)[2] << " (should be 0)"
-            << std::endl;
-  std::cerr << "texture value: " << std::dec
-            << static_cast<uint8_t *>(buffer)[3] << " (should be 0)"
-            << std::endl;
+  fprintf(stderr, "texture value: %d (should be 2)\n",
+          static_cast<uint8_t *>(buffer)[0]);
+  fprintf(stderr, "texture value: %d (should be 0)\n",
+          static_cast<uint8_t *>(buffer)[1]);
+  fprintf(stderr, "texture value: %d (should be 0)\n",
+          static_cast<uint8_t *>(buffer)[2]);
+  fprintf(stderr, "texture value: %d (should be 0)\n",
+          static_cast<uint8_t *>(buffer)[3]);
 
   free(buffer);
 }
